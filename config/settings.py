@@ -27,7 +27,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'EntrepriseApp.utilisateur'
+AUTH_USER_MODEL = 'EntrepriseApp.Utilisateur'
 
 
 # Application definition
