@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Offres{% endblock %}
+
+{% block content %}
+<h2>Offres ({{ offres|length }})</h2>
+<ul class="liste">
+  {% for offre in offres %}
+  <li>
+    <a href="{% url 'offres:detail' offre.pk %}">Offre n°{{ offre.pk }}</a>
+    — expédition <a href="{% url 'expeditions:detail' offre.expedition.reference %}">{{ offre.expedition.reference }}</a>
+    — {{ offre.transporteur.raison_sociale }} ({{ offre.vehicule.immatriculation|upper }})
+    <br>
+    {{ offre.prix|floatformat:2 }} DT · {{ offre.delai_jours }} jour{{ offre.delai_jours|pluralize }}
+    · proposée le {{ offre.date_proposition|date:"d/m/Y" }}
+    <span class="badge {{ offre.statut }}">{{ offre.get_statut_display }}</span>
+  </li>
+  {% empty %}
+  <li>Aucune offre pour le moment.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

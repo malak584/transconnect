@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TransConnect{% endblock %} — TransConnect</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; color: #222; background: #f6f7f9; }
+    nav { background: #1f3a5f; padding: 0 1.5rem; display: flex; gap: 1.5rem; align-items: center; }
+    nav a { color: #fff; text-decoration: none; padding: 1rem 0; }
+    nav a.marque { font-weight: 700; margin-right: 1rem; }
+    nav a:hover { text-decoration: underline; }
+    nav .admin { margin-left: auto; }
+    main { max-width: 960px; margin: 1.5rem auto; padding: 0 1rem; }
+    ul.liste { list-style: none; padding: 0; }
+    ul.liste li { background: #fff; border: 1px solid #e1e4e8; border-radius: 6px; padding: .75rem 1rem; margin-bottom: .5rem; }
+    .messages { list-style: none; padding: 0; }
+    .messages li { background: #e6f4ea; border: 1px solid #b7dfc2; padding: .6rem 1rem; border-radius: 6px; margin-bottom: .5rem; }
+    .badge { color: #fff; padding: 2px 8px; border-radius: 4px; font-size: .85em; background: #777; }
+    .badge.publiee, .badge.proposee { background: #F0AD4E; }
+    .badge.attribuee { background: #337AB7; }
+    .badge.livree, .badge.acceptee { background: #5CB85C; }
+    .badge.annulee, .badge.refusee { background: #D9534F; }
+    .badge.en-cours { background: #5BC0DE; }
+    dl { display: grid; grid-template-columns: 12rem 1fr; gap: .4rem 1rem; background: #fff; padding: 1rem; border-radius: 6px; border: 1px solid #e1e4e8; }
+    dt { font-weight: 600; }
+    dd { margin: 0; }
+    button.danger { background: #D9534F; color: #fff; border: 0; padding: .5rem 1rem; border-radius: 4px; cursor: pointer; }
+    .retour { display: inline-block; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="marque" href="{% url 'accueil' %}">TransConnect</a>
+    <a href="{% url 'expeditions:liste' %}">Expéditions</a>
+    <a href="{% url 'vehicules:liste' %}">Véhicules</a>
+    <a href="{% url 'offres:liste' %}">Offres</a>
+    <a href="{% url 'entreprises:liste' %}">Entreprises</a>
+    <a class="admin" href="{% url 'admin:index' %}">Administration</a>
+  </nav>
+  <main>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
