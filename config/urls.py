@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+admin.site.site_header = "TransConnect — Espace opérations"
+admin.site.site_title = "TransConnect Admin"
+admin.site.index_title = "Pilotage des expéditions, offres et flotte"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
