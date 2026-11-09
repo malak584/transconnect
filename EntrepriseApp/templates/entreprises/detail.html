@@ -12,6 +12,7 @@
 </dl>
 
 {% if entreprise.type_entreprise == 'transporteur' %}
+<p><a href="{% url 'offres:ajouter' entreprise.pk %}">+ Proposer une offre</a></p>
 <h3>Véhicules ({{ vehicules|length }})</h3>
 <ul class="liste">
   {% for vehicule in vehicules %}
@@ -34,6 +35,7 @@
   {% endfor %}
 </ul>
 {% else %}
+<p><a href="{% url 'expeditions:ajouter' entreprise.pk %}">+ Publier une expédition</a></p>
 <h3>Expéditions ({{ expeditions|length }})</h3>
 <ul class="liste">
   {% for expedition in expeditions %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Modifier le véhicule{% else %}Ajouter un véhicule{% endif %}{% endblock %}
+
+{% block content %}
+<h2>{% if object %}Modifier le véhicule {{ object.immatriculation }}{% else %}Ajouter un véhicule{% endif %}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Enregistrer</button>
+</form>
+<a class="retour" href="{% url 'vehicules:liste' %}">← Retour à la liste</a>
+{% endblock %}

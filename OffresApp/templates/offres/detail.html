@@ -18,10 +18,9 @@
   <dt>Proposée le</dt><dd>{{ offre.date_proposition|date:"d/m/Y" }}</dd>
 </dl>
 
-<form method="post" action="{% url 'offres:supprimer' offre.pk %}"
-      onsubmit="return confirm('Supprimer définitivement cette offre ?');">
-  {% csrf_token %}
-  <button type="submit" class="danger">Supprimer cette offre</button>
-</form>
+<p>
+  {% if offre.statut == 'proposee' %}<a href="{% url 'offres:modifier' offre.pk %}">Modifier</a> ·{% endif %}
+  <a href="{% url 'offres:supprimer' offre.pk %}">Supprimer</a>
+</p>
 <a class="retour" href="{% url 'offres:liste' %}">← Retour à la liste</a>
 {% endblock %}

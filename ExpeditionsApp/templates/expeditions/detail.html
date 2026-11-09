@@ -29,10 +29,9 @@
   {% endfor %}
 </ul>
 
-<form method="post" action="{% url 'expeditions:supprimer' expedition.reference %}"
-      onsubmit="return confirm('Supprimer définitivement cette expédition et ses offres ?');">
-  {% csrf_token %}
-  <button type="submit" class="danger">Supprimer cette expédition</button>
-</form>
+<p>
+  <a href="{% url 'expeditions:modifier' expedition.reference %}">Modifier</a> ·
+  <a href="{% url 'expeditions:supprimer' expedition.reference %}">Supprimer</a>
+</p>
 <a class="retour" href="{% url 'expeditions:liste' %}">← Retour à la liste</a>
 {% endblock %}

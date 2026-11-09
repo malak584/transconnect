@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Supprimer {{ vehicule.immatriculation }}{% endblock %}
+
+{% block content %}
+<h2>Supprimer le véhicule {{ vehicule.immatriculation|upper }} ?</h2>
+<p>Cette action est définitive : les offres faites avec ce véhicule seront supprimées aussi.</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="danger">Oui, supprimer</button>
+</form>
+<a class="retour" href="{% url 'vehicules:detail' vehicule.pk %}">Annuler</a>
+{% endblock %}

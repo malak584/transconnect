@@ -26,10 +26,9 @@
   {% endfor %}
 </ul>
 
-<form method="post" action="{% url 'vehicules:supprimer' vehicule.pk %}"
-      onsubmit="return confirm('Supprimer définitivement ce véhicule et ses offres ?');">
-  {% csrf_token %}
-  <button type="submit" class="danger">Supprimer ce véhicule</button>
-</form>
+<p>
+  <a href="{% url 'vehicules:modifier' vehicule.pk %}">Modifier</a> ·
+  <a href="{% url 'vehicules:supprimer' vehicule.pk %}">Supprimer</a>
+</p>
 <a class="retour" href="{% url 'vehicules:liste' %}">← Retour à la liste</a>
 {% endblock %}
