@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Offre n°{{ offre.pk }}{% endblock %}
+
+{% block content %}
+<h2>Offre n°{{ offre.pk }}
+  <span class="badge {{ offre.statut }}">{{ offre.get_statut_display }}</span>
+</h2>
+<dl>
+  <dt>Expédition</dt>
+  <dd><a href="{% url 'expeditions:detail' offre.expedition.reference %}">{{ offre.expedition.reference }}</a>
+      ({{ offre.expedition.ville_depart }} → {{ offre.expedition.ville_arrivee }})</dd>
+  <dt>Transporteur</dt>
+  <dd><a href="{% url 'entreprises:detail' offre.transporteur.pk %}">{{ offre.transporteur.raison_sociale }}</a></dd>
+  <dt>Véhicule</dt>
+  <dd><a href="{% url 'vehicules:detail' offre.vehicule.pk %}">{{ offre.vehicule.immatriculation|upper }}</a></dd>
+  <dt>Prix</dt><dd>{{ offre.prix|floatformat:2 }} DT</dd>
+  <dt>Délai</dt><dd>{{ offre.delai_jours }} jour{{ offre.delai_jours|pluralize }}</dd>
+  <dt>Proposée le</dt><dd>{{ offre.date_proposition|date:"d/m/Y" }}</dd>
+</dl>
+
+<p>
+  {% if offre.statut == 'proposee' %}<a href="{% url 'offres:modifier' offre.pk %}">Modifier</a> ·{% endif %}
+  <a href="{% url 'offres:supprimer' offre.pk %}">Supprimer</a>
+</p>
+<a class="retour" href="{% url 'offres:liste' %}">← Retour à la liste</a>
+{% endblock %}

@@ -9,7 +9,6 @@ from django.utils import timezone
 # Create your models here.
 class UtilisateurManager(UserManager):
     def _generate_user_id(self):
-        # format AAuserNN : AA = année d'inscription, NN = compteur 00-99 remis à zéro chaque année
         prefix = f"{timezone.now().year % 100:02d}user"
         dernier = self.filter(user_id__startswith=prefix).order_by('-user_id').values_list('user_id', flat=True).first()
         numero = int(dernier[-2:]) + 1 if dernier else 0

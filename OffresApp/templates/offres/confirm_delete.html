@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Supprimer l'offre n°{{ offre.pk }}{% endblock %}
+
+{% block content %}
+<h2>Supprimer l'offre n°{{ offre.pk }} ?</h2>
+<p>Offre de {{ offre.transporteur.raison_sociale }} sur l'expédition {{ offre.expedition.reference }}.</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="danger">Oui, supprimer</button>
+</form>
+<a class="retour" href="{% url 'offres:detail' offre.pk %}">Annuler</a>
+{% endblock %}

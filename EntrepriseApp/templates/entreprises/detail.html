@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{{ entreprise.raison_sociale }}{% endblock %}
+
+{% block content %}
+<h2>{{ entreprise.raison_sociale }}</h2>
+<dl>
+  <dt>Type</dt><dd>{{ entreprise.get_type_entreprise_display|title }}</dd>
+  <dt>Matricule fiscal</dt><dd>{{ entreprise.matricule_fiscal|upper }}</dd>
+  <dt>Adresse</dt><dd>{{ entreprise.adresse|linebreaksbr }}</dd>
+  <dt>Gérant</dt><dd>{{ entreprise.gerant.get_full_name|default:entreprise.gerant.username }}</dd>
+  <dt>Inscrite le</dt><dd>{{ entreprise.created_at|date:"d/m/Y" }}</dd>
+</dl>
+
+{% if entreprise.type_entreprise == 'transporteur' %}
+<p><a href="{% url 'offres:ajouter' entreprise.pk %}">+ Proposer une offre</a></p>
+<h3>Véhicules ({{ vehicules|length }})</h3>
+<ul class="liste">
+  {% for vehicule in vehicules %}
+  <li><a href="{% url 'vehicules:detail' vehicule.pk %}">{{ vehicule.immatriculation|upper }}</a>
+      — {{ vehicule.get_type_vehicule_display }}, {{ vehicule.capacite_kg }} kg
+      — {{ vehicule.disponible|yesno:"disponible,indisponible" }}</li>
+  {% empty %}
+  <li>Ce transporteur n'a aucun véhicule.</li>
+  {% endfor %}
+</ul>
+
+<h3>Offres ({{ offres|length }})</h3>
+<ul class="liste">
+  {% for offre in offres %}
+  <li><a href="{% url 'offres:detail' offre.pk %}">Offre n°{{ offre.pk }}</a>
+      — {{ offre.expedition.reference }} — {{ offre.prix|floatformat:2 }} DT
+      <span class="badge {{ offre.statut }}">{{ offre.get_statut_display }}</span></li>
+  {% empty %}
+  <li>Aucune offre déposée.</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p><a href="{% url 'expeditions:ajouter' entreprise.pk %}">+ Publier une expédition</a></p>
+<h3>Expéditions ({{ expeditions|length }})</h3>
+<ul class="liste">
+  {% for expedition in expeditions %}
+  <li><a href="{% url 'expeditions:detail' expedition.reference %}">{{ expedition.reference }}</a>
+      — {{ expedition.ville_depart }} → {{ expedition.ville_arrivee }}
+      <span class="badge {{ expedition.statut|slugify }}">{{ expedition.get_statut_display }}</span></li>
+  {% empty %}
+  <li>Aucune expédition publiée.</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<a class="retour" href="{% url 'entreprises:liste' %}">← Retour à la liste</a>
+{% endblock %}

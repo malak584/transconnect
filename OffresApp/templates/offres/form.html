@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Modifier l'offre{% else %}Proposer une offre{% endif %}{% endblock %}
+
+{% block content %}
+<h2>{% if object %}Modifier l'offre n°{{ object.pk }}{% else %}Proposer une offre pour {{ entreprise.raison_sociale }}{% endif %}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">{% if object %}Enregistrer{% else %}Envoyer l'offre{% endif %}</button>
+</form>
+<a class="retour" href="{% url 'offres:liste' %}">← Retour à la liste</a>
+{% endblock %}

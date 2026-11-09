@@ -104,3 +104,10 @@ class OffreTest(TestCase):
         self.expedition.poids_kg = 1000
         self.expedition.save()
         self.offre(vehicule=petit).save()
+
+
+class OffreAdminExportTest(TestCase):
+    def test_export_csv_declare_sur_offreadmin(self):
+        from django.contrib import admin
+        from .admin import exporter_offres_csv
+        self.assertIn(exporter_offres_csv, admin.site._registry[Offre].actions)
