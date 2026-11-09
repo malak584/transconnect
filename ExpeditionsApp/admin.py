@@ -1,8 +1,10 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.html import format_html
 
 # Register your models here.
+from OffresApp.models import Offre
 from .models import Expedition
 
 
@@ -24,6 +26,19 @@ class EnRetard(admin.SimpleListFilter):
         return queryset
 
 
+class OffreInline(admin.StackedInline):
+    model = Offre
+    fk_name = 'expedition'
+    extra = 0
+    fields = ('transporteur', 'vehicule', 'prix', 'delai_jours', 'statut')
+    readonly_fields = ('transporteur', 'vehicule', 'prix', 'delai_jours', 'statut')
+    show_change_link = True
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Expedition)
 class ExpeditionAdmin(admin.ModelAdmin):
     list_display = ('reference', 'ville_depart', 'ville_arrivee', 'date_souhaitee', 'poids_kg', 'statut_colore', 'statut', 'entreprise', 'created_at')
@@ -38,20 +53,32 @@ class ExpeditionAdmin(admin.ModelAdmin):
         ('Suivi', {'fields': ('statut_colore', 'created_at', 'updated_at')}),
     )
     ordering = ('-created_at',)
-    date_hierarchy = 'created_at'
+    date_hierarchy = 'date_souhaitee'
     list_per_page = 20
-    @admin.action(description='Marquer comme livrée')
-    def make_it_livree(self, request, queryset):
-        liste=queryset.filter(statut=['en cours'])
-        for exp in liste:
-            exp.statut='livree'
-            try:
-                exp.save()
-            except validationError as error:
-                errors.append(f"Erreur lors de la mise à jour de l'expédition {exp.reference}: {error}")
-            
+    inlines = [OffreInline]
+    actions = ['cloturer_expeditions']
 
-        actions = ["Marquer comme livrée"]
+    @admin.action(description='Clôturer les expéditions sélectionnées')
+    def cloturer_expeditions(self, request, queryset):
+        # seules les expéditions "en cours" sont traitées ; save() (et non update()) pour déclencher clean()/save()
+        total = queryset.count()
+        a_cloturer = list(queryset.filter(statut='en cours'))
+        cloturees = 0
+        for exp in a_cloturer:
+            exp.statut = 'livree'
+            try:
+                exp.full_clean()
+                exp.save()
+            except ValidationError as erreur:
+                self.message_user(request, f"{exp.reference} : {' '.join(erreur.messages)}", level=messages.ERROR)
+            else:
+                cloturees += 1
+        ignorees = total - len(a_cloturer)
+        self.message_user(
+            request,
+            f"{cloturees} expédition(s) clôturée(s), {ignorees} ignorée(s) (statut différent de « en cours »).",
+            level=messages.SUCCESS if cloturees else messages.WARNING,
+        )
 
     @admin.display(description='Statut')
     def statut_colore(self, obj):
@@ -63,4 +90,3 @@ class ExpeditionAdmin(admin.ModelAdmin):
             '<span style="color:white;background:{};padding:3px 8px;border-radius:4px;">{}</span>',
             couleurs.get(obj.statut, '#999'), obj.get_statut_display(),
         )
-
