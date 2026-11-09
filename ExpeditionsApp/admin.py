@@ -60,7 +60,6 @@ class ExpeditionAdmin(admin.ModelAdmin):
 
     @admin.action(description='Clôturer les expéditions sélectionnées')
     def cloturer_expeditions(self, request, queryset):
-        # seules les expéditions "en cours" sont traitées ; save() (et non update()) pour déclencher clean()/save()
         total = queryset.count()
         a_cloturer = list(queryset.filter(statut='en cours'))
         cloturees = 0

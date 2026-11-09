@@ -4,7 +4,9 @@ from . import views
 app_name = 'expeditions'
 
 urlpatterns = [
-    path('', views.liste_expeditions, name='liste'),
-    path('<str:reference>/', views.detail_expedition, name='detail'),
-    path('<str:reference>/supprimer/', views.supprimer_expedition, name='supprimer'),
+    path('', views.ExpeditionListView.as_view(), name='liste'),
+    path('ajouter/<int:entreprise_id>/', views.ExpeditionCreateView.as_view(), name='ajouter'),
+    path('<str:reference>/', views.ExpeditionDetailView.as_view(), name='detail'),
+    path('<str:reference>/modifier/', views.ExpeditionUpdateView.as_view(), name='modifier'),
+    path('<str:reference>/supprimer/', views.ExpeditionDeleteView.as_view(), name='supprimer'),
 ]
